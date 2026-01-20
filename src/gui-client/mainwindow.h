@@ -2,6 +2,8 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QDialog>
+#include <QLabel>
 #include <memory>
 
 namespace veil::gui {
@@ -22,10 +24,12 @@ class MainWindow : public QMainWindow {
   void showConnectionView();
   void showSettingsView();
   void showDiagnosticsView();
+  void showAboutDialog();
 
  private:
   void setupUi();
   void setupMenuBar();
+  void setupStatusBar();
   void applyDarkTheme();
 
   QStackedWidget* stackedWidget_;
