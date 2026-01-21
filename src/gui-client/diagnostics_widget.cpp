@@ -415,20 +415,20 @@ void DiagnosticsWidget::onSimulateUpdates() {
   updateReassemblyStats(
       static_cast<uint32_t>(demoPacketsReceived_ / 50),
       static_cast<uint32_t>(demoPacketsReceived_ / 52),
-      static_cast<uint32_t>(qrand() % 10),
+      static_cast<uint32_t>(QRandomGenerator::global()->bounded(10)),
       static_cast<uint32_t>(lost / 10)
   );
 
   updateObfuscationProfile(
       true,
-      128 + (qrand() % 256),
-      QString("Poisson (lambda=0.%1)").arg(3 + (qrand() % 4)),
+      128 + (QRandomGenerator::global()->bounded(256)),
+      QString("Poisson (lambda=0.%1)").arg(3 + (QRandomGenerator::global()->bounded(4))),
       "IoT Sensor",
-      static_cast<double>(qrand() % 50) / 10.0
+      static_cast<double>(QRandomGenerator::global()->bounded(50)) / 10.0
   );
 
   // Occasionally add log entries
-  if (qrand() % 5 == 0) {
+  if (QRandomGenerator::global()->bounded(5) == 0) {
     QString timestamp = QDateTime::currentDateTime().toString("hh:mm:ss");
     static const char* events[] = {
         "Data packet sent",
@@ -438,7 +438,7 @@ void DiagnosticsWidget::onSimulateUpdates() {
         "RTT measurement: 25ms"
     };
     static const char* levels[] = {"info", "info", "debug", "success", "info"};
-    int idx = qrand() % 5;
+    int idx = QRandomGenerator::global()->bounded(5);
     addLogEntry(timestamp, events[idx], levels[idx]);
   }
 }
