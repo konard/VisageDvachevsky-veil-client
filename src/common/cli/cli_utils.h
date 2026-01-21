@@ -94,7 +94,7 @@ inline bool supports_color() {
   return false;
 #else
   // Check for TTY and TERM environment
-  if (!isatty(fileno(stdout))) {
+  if (isatty(fileno(stdout)) == 0) {
     return false;
   }
   const char* term = std::getenv("TERM");
@@ -219,8 +219,8 @@ inline void print_status(const std::string& label, const std::string& value,
 // Progress bar
 class ProgressBar {
  public:
-  explicit ProgressBar(int total, int width = 40, const std::string& prefix = "")
-      : total_(total), width_(width), prefix_(prefix), current_(0) {}
+  explicit ProgressBar(int total, int width = 40, std::string prefix = "")
+      : total_(total), width_(width), prefix_(std::move(prefix)) {}
 
   void update(int current) {
     current_ = current;
@@ -269,13 +269,13 @@ class ProgressBar {
   int total_;
   int width_;
   std::string prefix_;
-  int current_;
+  int current_{0};
 };
 
 // Spinner for ongoing operations
 class Spinner {
  public:
-  explicit Spinner(const std::string& message) : message_(message), frame_(0), running_(false) {}
+  explicit Spinner(std::string message) : message_(std::move(message)) {}
 
   void start() {
     running_ = true;
@@ -328,8 +328,8 @@ class Spinner {
   }
 
   std::string message_;
-  int frame_;
-  bool running_;
+  int frame_{0};
+  bool running_{false};
 };
 
 // Banner/header printing
