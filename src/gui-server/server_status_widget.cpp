@@ -143,7 +143,7 @@ void ServerStatusWidget::setupUi() {
 
   maxClientsLabel_ = new QLabel("/ 100", this);
   maxClientsLabel_->setStyleSheet(QString("font-size: %1px; color: %2;")
-                                      .arg(fonts::kFontSizeSmall)
+                                      .arg(fonts::kFontSizeCaption)
                                       .arg(colors::dark::kTextSecondary));
   clientsRow->addWidget(maxClientsLabel_);
   clientsRow->addStretch();
@@ -361,8 +361,8 @@ void ServerStatusWidget::updatePulseAnimation() {
 
 void ServerStatusWidget::simulateDemoData() {
   // Simulate traffic
-  demoBytesSent_ += 1024 + (rand() % 10240);
-  demoBytesReceived_ += 512 + (rand() % 5120);
+  demoBytesSent_ += static_cast<uint64_t>(1024 + (rand() % 10240));
+  demoBytesReceived_ += static_cast<uint64_t>(512 + (rand() % 5120));
 
   // Occasionally change client count
   if (rand() % 5 == 0) {
@@ -413,9 +413,9 @@ QString ServerStatusWidget::formatBytes(uint64_t bytes) const {
 }
 
 QString ServerStatusWidget::formatUptime(qint64 seconds) const {
-  int hours = seconds / 3600;
-  int minutes = (seconds % 3600) / 60;
-  int secs = seconds % 60;
+  int hours = static_cast<int>(seconds / 3600);
+  int minutes = static_cast<int>((seconds % 3600) / 60);
+  int secs = static_cast<int>(seconds % 60);
   return QString("%1:%2:%3")
       .arg(hours, 2, 10, QChar('0'))
       .arg(minutes, 2, 10, QChar('0'))
