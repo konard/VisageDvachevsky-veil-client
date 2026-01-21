@@ -344,8 +344,8 @@ void ClientListWidget::onViewClientDetails() {
 void ClientListWidget::updateDemoData() {
   // Update demo client metrics
   for (auto& client : demoClients_) {
-    client.bytesSent += 1024 + (rand() % 10240);
-    client.bytesReceived += 512 + (rand() % 20480);
+    client.bytesSent += static_cast<uint64_t>(1024 + (rand() % 10240));
+    client.bytesReceived += static_cast<uint64_t>(512 + (rand() % 20480));
     client.latencyMs = qMax(10, client.latencyMs + (rand() % 20) - 10);
     updateClient(client);
   }
@@ -449,9 +449,9 @@ QString ClientListWidget::formatBytes(uint64_t bytes) const {
 
 QString ClientListWidget::formatUptime(qint64 connectedAt) const {
   qint64 seconds = QDateTime::currentSecsSinceEpoch() - connectedAt;
-  int hours = seconds / 3600;
-  int minutes = (seconds % 3600) / 60;
-  int secs = seconds % 60;
+  int hours = static_cast<int>(seconds / 3600);
+  int minutes = static_cast<int>((seconds % 3600) / 60);
+  int secs = static_cast<int>(seconds % 60);
 
   if (hours > 0) {
     return QString("%1h %2m").arg(hours).arg(minutes);
