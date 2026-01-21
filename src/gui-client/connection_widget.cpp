@@ -410,8 +410,8 @@ void ConnectionWidget::onUptimeUpdate() {
     // Demo: Update metrics with simulated values
     updateMetrics(
         25 + QRandomGenerator::global()->bounded(20),  // 25-45ms latency
-        static_cast<uint64_t>(1200000 + QRandomGenerator::global()->bounded(800000)),  // 1.2-2.0 MB/s TX
-        static_cast<uint64_t>(3400000 + QRandomGenerator::global()->bounded(1000000))  // 3.4-4.4 MB/s RX
+        1200000 + static_cast<uint64_t>(QRandomGenerator::global()->bounded(800000)),  // 1.2-2.0 MB/s TX
+        3400000 + static_cast<uint64_t>(QRandomGenerator::global()->bounded(1000000))  // 3.4-4.4 MB/s RX
     );
   }
 }

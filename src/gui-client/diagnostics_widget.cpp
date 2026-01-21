@@ -396,8 +396,8 @@ void DiagnosticsWidget::onClearLogClicked() {
 
 void DiagnosticsWidget::onSimulateUpdates() {
   // Simulate increasing packet counts
-  demoPacketsSent_ += static_cast<uint64_t>(10 + QRandomGenerator::global()->bounded(20));
-  demoPacketsReceived_ += static_cast<uint64_t>(10 + QRandomGenerator::global()->bounded(20));
+  demoPacketsSent_ += 10 + static_cast<uint64_t>(QRandomGenerator::global()->bounded(20));
+  demoPacketsReceived_ += 10 + static_cast<uint64_t>(QRandomGenerator::global()->bounded(20));
 
   uint64_t lost = demoPacketsReceived_ / 2500;  // ~0.04% loss rate
   uint64_t retransmitted = demoPacketsSent_ / 3333;  // ~0.03% retransmit rate
@@ -421,7 +421,7 @@ void DiagnosticsWidget::onSimulateUpdates() {
 
   updateObfuscationProfile(
       true,
-      static_cast<uint32_t>(128 + QRandomGenerator::global()->bounded(256)),
+      128 + static_cast<uint32_t>(QRandomGenerator::global()->bounded(256)),
       QString("Poisson (lambda=0.%1)").arg(3 + QRandomGenerator::global()->bounded(4)),
       "IoT Sensor",
       static_cast<double>(QRandomGenerator::global()->bounded(50)) / 10.0
