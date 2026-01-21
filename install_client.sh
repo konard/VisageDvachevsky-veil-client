@@ -366,11 +366,107 @@ build_veil_client() {
     run_cmd mkdir -p "$LOG_DIR"
     run_cmd chmod 755 "$LOG_DIR"
 
+    # Install setup wizard script
+    log_info "Installing setup wizard..."
+    run_cmd mkdir -p "$INSTALL_DIR/share/veil"
+    if [[ -f "$BUILD_DIR/scripts/setup-wizard.sh" ]]; then
+        run_cmd cp "$BUILD_DIR/scripts/setup-wizard.sh" "$INSTALL_DIR/share/veil/setup-wizard.sh"
+        run_cmd chmod 755 "$INSTALL_DIR/share/veil/setup-wizard.sh"
+        log_success "Setup wizard installed to $INSTALL_DIR/share/veil/setup-wizard.sh"
+    elif [[ -f "$BUILD_DIR/../scripts/setup-wizard.sh" ]]; then
+        run_cmd cp "$BUILD_DIR/../scripts/setup-wizard.sh" "$INSTALL_DIR/share/veil/setup-wizard.sh"
+        run_cmd chmod 755 "$INSTALL_DIR/share/veil/setup-wizard.sh"
+        log_success "Setup wizard installed to $INSTALL_DIR/share/veil/setup-wizard.sh"
+    fi
+
     log_success "VEIL client built and installed to $INSTALL_DIR/bin"
 
     # Show what was installed
     log_info "Installed binaries:"
     ls -la "$INSTALL_DIR/bin/veil-client"* 2>/dev/null || true
+}
+
+# Interactive configuration wizard for inexperienced users
+run_interactive_setup_wizard() {
+    echo ""
+    echo -e "${CYAN}╔════════════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║                  VEIL Client Setup Wizard                              ║${NC}"
+    echo -e "${CYAN}╚════════════════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${BOLD}This wizard will help you configure your VEIL VPN client.${NC}"
+    echo ""
+
+    # Explain what's needed
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════════════════${NC}"
+    echo -e "${YELLOW}  To connect to a VEIL VPN server, you need the following information:${NC}"
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo "  1. ${BOLD}Server IP address or hostname${NC}"
+    echo "     Example: vpn.example.com or 203.0.113.1"
+    echo ""
+    echo "  2. ${BOLD}Server port${NC}"
+    echo "     Default: 4433 (ask your server administrator if different)"
+    echo ""
+    echo "  3. ${BOLD}Pre-shared key file${NC} (client.key)"
+    echo "     A secret key file that must match the server's key"
+    echo "     Your server administrator should provide this securely"
+    echo ""
+    echo "  4. ${BOLD}Obfuscation seed file${NC} (obfuscation.seed)"
+    echo "     A seed file for traffic obfuscation (must match server)"
+    echo "     Your server administrator should provide this securely"
+    echo ""
+    echo -e "${CYAN}Note: The wizard will ask you for the server details now.${NC}"
+    echo -e "${CYAN}      The key files must be obtained from your server administrator.${NC}"
+    echo ""
+
+    read -p "Press Enter to continue with the setup wizard..."
+    echo ""
+
+    # Ask for server address
+    echo -e "${BOLD}Server Configuration:${NC}"
+    echo ""
+    read -p "Enter server IP address or hostname: " SERVER_ADDRESS
+    while [[ -z "$SERVER_ADDRESS" ]]; do
+        echo -e "${RED}Server address cannot be empty!${NC}"
+        read -p "Enter server IP address or hostname: " SERVER_ADDRESS
+    done
+
+    # Ask for server port
+    read -p "Enter server port [default: 4433]: " SERVER_PORT
+    SERVER_PORT="${SERVER_PORT:-4433}"
+
+    # Validate port number
+    if ! [[ "$SERVER_PORT" =~ ^[0-9]+$ ]] || [ "$SERVER_PORT" -lt 1 ] || [ "$SERVER_PORT" -gt 65535 ]; then
+        log_warn "Invalid port number, using default: 4433"
+        SERVER_PORT=4433
+    fi
+
+    echo ""
+    echo -e "${GREEN}✓ Server configured: ${SERVER_ADDRESS}:${SERVER_PORT}${NC}"
+    echo ""
+
+    # Show next steps for key files
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════════════════${NC}"
+    echo -e "${YELLOW}  Next: Obtain Key Files from Your Server Administrator${NC}"
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo "You need to obtain these files from your VEIL server administrator:"
+    echo ""
+    echo "  1. ${BOLD}client.key${NC} - Pre-shared encryption key"
+    echo "  2. ${BOLD}obfuscation.seed${NC} - Traffic obfuscation seed"
+    echo ""
+    echo -e "${CYAN}If you run the VEIL server yourself, you can copy them with:${NC}"
+    echo ""
+    echo "  scp user@${SERVER_ADDRESS}:/etc/veil/server.key $CONFIG_DIR/client.key"
+    echo "  scp user@${SERVER_ADDRESS}:/etc/veil/obfuscation.seed $CONFIG_DIR/obfuscation.seed"
+    echo ""
+    echo -e "${CYAN}Or if you have direct access to the server:${NC}"
+    echo ""
+    echo "  sudo cat /etc/veil/server.key | ssh user@client-machine \"sudo tee $CONFIG_DIR/client.key\""
+    echo "  sudo cat /etc/veil/obfuscation.seed | ssh user@client-machine \"sudo tee $CONFIG_DIR/obfuscation.seed\""
+    echo ""
+    echo -e "${YELLOW}⚠  SECURITY: Transfer these files securely! Never send via email or chat.${NC}"
+    echo ""
 }
 
 # Create client configuration
@@ -390,14 +486,17 @@ create_client_config() {
         run_cmd cp "$CONFIG_DIR/client.conf" "$CONFIG_DIR/client.conf.backup.$(date +%s)"
     fi
 
+    # Run interactive setup wizard
+    run_interactive_setup_wizard
+
     cat > "$CONFIG_DIR/client.conf" <<EOF
 # VEIL Client Configuration
 # Auto-generated by install_client.sh on $(date)
 
 [client]
-# Server connection settings - EDIT THESE
-server_address = <YOUR_SERVER_IP>
-server_port = 4433
+# Server connection settings
+server_address = ${SERVER_ADDRESS}
+server_port = ${SERVER_PORT}
 
 # Auto-reconnect settings
 auto_reconnect = true
@@ -535,20 +634,49 @@ display_summary() {
     echo -e "${BLUE}Configuration Files:${NC}"
     echo "  • Config: $CONFIG_DIR/client.conf"
     echo ""
-    echo -e "${YELLOW}⚠ IMPORTANT - Before Connecting:${NC}"
-    echo ""
-    echo "You need the following files from your VEIL server:"
-    echo "  1. server.key → $CONFIG_DIR/client.key"
-    echo "  2. obfuscation.seed → $CONFIG_DIR/obfuscation.seed"
-    echo ""
-    echo "Example secure transfer from server:"
-    echo "  scp user@server:/etc/veil/server.key $CONFIG_DIR/client.key"
-    echo "  scp user@server:/etc/veil/obfuscation.seed $CONFIG_DIR/obfuscation.seed"
-    echo ""
-    echo "Edit $CONFIG_DIR/client.conf and set:"
-    echo "  • server_address = <YOUR_SERVER_IP>"
-    echo "  • server_port = 4433"
-    echo ""
+
+    # Check if key files are present
+    local missing_files=()
+    if [[ ! -f "$CONFIG_DIR/client.key" ]]; then
+        missing_files+=("client.key")
+    fi
+    if [[ ! -f "$CONFIG_DIR/obfuscation.seed" ]]; then
+        missing_files+=("obfuscation.seed")
+    fi
+
+    if [[ ${#missing_files[@]} -gt 0 ]]; then
+        echo -e "${YELLOW}╔════════════════════════════════════════════════════════════════════════╗${NC}"
+        echo -e "${YELLOW}║                 ⚠  IMPORTANT - Action Required  ⚠                      ║${NC}"
+        echo -e "${YELLOW}╚════════════════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${RED}Missing required files:${NC}"
+        for file in "${missing_files[@]}"; do
+            echo "  ✗ $CONFIG_DIR/$file"
+        done
+        echo ""
+        echo -e "${BOLD}You MUST obtain these files from your VEIL server before connecting:${NC}"
+        echo ""
+        echo "  1. ${BOLD}client.key${NC} - Pre-shared encryption key (32 bytes)"
+        echo "     Must match the server's key for secure connection"
+        echo ""
+        echo "  2. ${BOLD}obfuscation.seed${NC} - Traffic obfuscation seed (32 bytes)"
+        echo "     Must match the server's seed for protocol obfuscation"
+        echo ""
+        echo -e "${CYAN}Transfer from server (replace 'user@server' with actual credentials):${NC}"
+        echo ""
+        echo "  scp user@server:/etc/veil/server.key $CONFIG_DIR/client.key"
+        echo "  scp user@server:/etc/veil/obfuscation.seed $CONFIG_DIR/obfuscation.seed"
+        echo ""
+        echo -e "${CYAN}Set correct permissions after transfer:${NC}"
+        echo ""
+        echo "  sudo chmod 600 $CONFIG_DIR/client.key $CONFIG_DIR/obfuscation.seed"
+        echo ""
+        echo -e "${YELLOW}⚠  The client will NOT connect without these files!${NC}"
+        echo ""
+    else
+        echo -e "${GREEN}✓ All required key files are present${NC}"
+        echo ""
+    fi
 
     if [[ "$CREATE_SERVICE" == "true" ]]; then
         echo -e "${BLUE}Management Commands:${NC}"
@@ -579,6 +707,12 @@ display_summary() {
             echo "  • Service: sudo systemctl start veil-client-gui"
         fi
     fi
+
+    echo ""
+    echo -e "${BLUE}Need Help with Configuration?${NC}"
+    echo "  Run the interactive setup wizard anytime:"
+    echo "    ${BOLD}sudo ${INSTALL_DIR}/share/veil/setup-wizard.sh${NC}"
+    echo ""
 
     echo ""
     echo -e "${GREEN}═══════════════════════════════════════════════════════════════════════════${NC}"
