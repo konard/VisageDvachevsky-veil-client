@@ -60,10 +60,10 @@ void log_state_change(tunnel::ConnectionState old_state, tunnel::ConnectionState
               << get_state_color(old_state) << get_state_name(old_state) << cli::colors::kReset
               << " " << cli::colors::kDim << cli::symbols::kArrowRight << cli::colors::kReset
               << " " << get_state_color(new_state) << get_state_name(new_state)
-              << cli::colors::kReset << std::endl;
+              << cli::colors::kReset << '\n';
   } else {
     std::cout << "  State: " << get_state_name(old_state) << " -> " << get_state_name(new_state)
-              << std::endl;
+              << '\n';
   }
 }
 
@@ -74,13 +74,13 @@ void log_tunnel_error(const std::string& error) {
 
 void log_signal_sigint() {
   LOG_INFO("Received SIGINT, shutting down...");
-  std::cout << std::endl;
+  std::cout << '\n';
   cli::print_warning("Received interrupt signal, shutting down gracefully...");
 }
 
 void log_signal_sigterm() {
   LOG_INFO("Received SIGTERM, shutting down...");
-  std::cout << std::endl;
+  std::cout << '\n';
   cli::print_warning("Received termination signal, shutting down gracefully...");
 }
 
@@ -103,7 +103,7 @@ void print_configuration(const client::ClientConfig& config) {
     }
     cli::print_row("Custom Routes", routes_str);
   }
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 }  // namespace
@@ -115,22 +115,22 @@ int main(int argc, char* argv[]) {
 
   if (!client::parse_args(argc, argv, config, ec)) {
     cli::print_error("Failed to parse arguments: " + ec.message());
-    std::cerr << std::endl;
-    std::cerr << "Usage: veil-client -s <server> [-p <port>] [options]" << std::endl;
-    std::cerr << std::endl;
-    std::cerr << "Options:" << std::endl;
-    std::cerr << "  -s, --server <addr>    Server address (required)" << std::endl;
-    std::cerr << "  -p, --port <port>      Server port (default: 4433)" << std::endl;
-    std::cerr << "  -c, --config <file>    Configuration file path" << std::endl;
-    std::cerr << "  -k, --key <file>       Pre-shared key file" << std::endl;
-    std::cerr << "  -d, --daemon           Run as daemon" << std::endl;
-    std::cerr << "  -v, --verbose          Enable verbose logging" << std::endl;
-    std::cerr << "  --default-route        Set as default route" << std::endl;
-    std::cerr << "  --route <cidr>         Additional routes to add" << std::endl;
-    std::cerr << "  --tun-name <name>      TUN device name (default: veil0)" << std::endl;
-    std::cerr << "  --tun-ip <ip>          TUN device IP (default: 10.8.0.2)" << std::endl;
-    std::cerr << "  --mtu <size>           MTU size (default: 1400)" << std::endl;
-    std::cerr << std::endl;
+    std::cerr << '\n';
+    std::cerr << "Usage: veil-client -s <server> [-p <port>] [options]" << '\n';
+    std::cerr << '\n';
+    std::cerr << "Options:" << '\n';
+    std::cerr << "  -s, --server <addr>    Server address (required)" << '\n';
+    std::cerr << "  -p, --port <port>      Server port (default: 4433)" << '\n';
+    std::cerr << "  -c, --config <file>    Configuration file path" << '\n';
+    std::cerr << "  -k, --key <file>       Pre-shared key file" << '\n';
+    std::cerr << "  -d, --daemon           Run as daemon" << '\n';
+    std::cerr << "  -v, --verbose          Enable verbose logging" << '\n';
+    std::cerr << "  --default-route        Set as default route" << '\n';
+    std::cerr << "  --route <cidr>         Additional routes to add" << '\n';
+    std::cerr << "  --tun-name <name>      TUN device name (default: veil0)" << '\n';
+    std::cerr << "  --tun-ip <ip>          TUN device IP (default: 10.8.0.2)" << '\n';
+    std::cerr << "  --mtu <size>           MTU size (default: 1400)" << '\n';
+    std::cerr << '\n';
     return EXIT_FAILURE;
   }
 
@@ -270,7 +270,7 @@ int main(int argc, char* argv[]) {
   });
 
   // Run the tunnel
-  std::cout << std::endl;
+  std::cout << '\n';
   cli::print_section("Connection");
   cli::print_info("Connecting to " + config.tunnel.server_address + ":" +
                   std::to_string(config.tunnel.server_port) + "...");
@@ -282,7 +282,7 @@ int main(int argc, char* argv[]) {
   cli::print_info("Cleaning up routes...");
   route_manager->cleanup();
 
-  std::cout << std::endl;
+  std::cout << '\n';
   cli::print_success("VEIL Client stopped gracefully");
   LOG_INFO("VEIL Client stopped");
   return EXIT_SUCCESS;
