@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QFrame>
+#include <QRandomGenerator>
 
 #include "common/gui/theme.h"
 
@@ -245,7 +246,6 @@ void ConnectionWidget::onConnectClicked() {
 }
 
 void ConnectionWidget::setConnectionState(ConnectionState state) {
-  ConnectionState oldState = state_;
   state_ = state;
 
   // Handle state transitions
@@ -409,9 +409,9 @@ void ConnectionWidget::onUptimeUpdate() {
 
     // Demo: Update metrics with simulated values
     updateMetrics(
-        25 + (qrand() % 20),  // 25-45ms latency
-        1200000 + (qrand() % 800000),  // 1.2-2.0 MB/s TX
-        3400000 + (qrand() % 1000000)  // 3.4-4.4 MB/s RX
+        25 + QRandomGenerator::global()->bounded(20),  // 25-45ms latency
+        1200000 + QRandomGenerator::global()->bounded(800000),  // 1.2-2.0 MB/s TX
+        3400000 + QRandomGenerator::global()->bounded(1000000)  // 3.4-4.4 MB/s RX
     );
   }
 }

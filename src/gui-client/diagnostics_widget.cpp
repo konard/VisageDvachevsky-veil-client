@@ -11,6 +11,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QMessageBox>
+#include <QRandomGenerator>
 
 #include "common/gui/theme.h"
 
@@ -395,8 +396,8 @@ void DiagnosticsWidget::onClearLogClicked() {
 
 void DiagnosticsWidget::onSimulateUpdates() {
   // Simulate increasing packet counts
-  demoPacketsSent_ += 10 + (qrand() % 20);
-  demoPacketsReceived_ += 10 + (qrand() % 20);
+  demoPacketsSent_ += 10 + QRandomGenerator::global()->bounded(20);
+  demoPacketsReceived_ += 10 + QRandomGenerator::global()->bounded(20);
 
   uint64_t lost = demoPacketsReceived_ / 2500;  // ~0.04% loss rate
   uint64_t retransmitted = demoPacketsSent_ / 3333;  // ~0.03% retransmit rate

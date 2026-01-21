@@ -6,6 +6,7 @@
 #include <QFrame>
 #include <QRegularExpression>
 #include <QMessageBox>
+#include <QTimer>
 
 #include "common/gui/theme.h"
 
