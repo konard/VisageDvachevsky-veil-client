@@ -6,10 +6,10 @@
 # of VEIL Server/Client on Ubuntu/Debian systems with optional Qt6 GUI.
 #
 # One-line install:
-#   curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil/main/install_veil.sh | sudo bash
+#   curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-core/main/install_veil.sh | sudo bash
 #
 # Or download and run manually:
-#   wget https://raw.githubusercontent.com/VisageDvachevsky/veil/main/install_veil.sh
+#   wget https://raw.githubusercontent.com/VisageDvachevsky/veil-core/main/install_veil.sh
 #   chmod +x install_veil.sh
 #   sudo ./install_veil.sh [OPTIONS]
 #
@@ -47,7 +47,7 @@ BOLD='\033[1m'
 NC='\033[0m' # No Color
 
 # Configuration variables
-VEIL_REPO="${VEIL_REPO:-https://github.com/VisageDvachevsky/veil.git}"
+VEIL_REPO="${VEIL_REPO:-https://github.com/VisageDvachevsky/veil-core.git}"
 VEIL_BRANCH="${VEIL_BRANCH:-main}"
 INSTALL_DIR="/usr/local"
 CONFIG_DIR="/etc/veil"
@@ -106,8 +106,8 @@ show_help() {
 VEIL One-Line Automated Installer
 
 USAGE:
-    curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil/main/install_veil.sh | sudo bash
-    curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil/main/install_veil.sh | sudo bash -s -- [OPTIONS]
+    curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-core/main/install_veil.sh | sudo bash
+    curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-core/main/install_veil.sh | sudo bash -s -- [OPTIONS]
 
     Or download and run:
     ./install_veil.sh [OPTIONS]
@@ -122,7 +122,7 @@ OPTIONS:
     --help              Show this help message
 
 ENVIRONMENT VARIABLES:
-    VEIL_REPO           Git repository URL (default: https://github.com/VisageDvachevsky/veil.git)
+    VEIL_REPO           Git repository URL (default: https://github.com/VisageDvachevsky/veil-core.git)
     VEIL_BRANCH         Git branch to use (default: main)
     INSTALL_MODE        Same as --mode
     BUILD_TYPE          Same as --build
@@ -153,7 +153,7 @@ GUI FEATURES (--with-gui):
     • Session management interface
     • Export diagnostics functionality
 
-For more information, visit: https://github.com/VisageDvachevsky/veil
+For more information, visit: https://github.com/VisageDvachevsky/veil-core
 EOF
 }
 

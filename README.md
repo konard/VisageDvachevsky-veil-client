@@ -1,7 +1,7 @@
 # VEIL
 
-[![CI](https://github.com/VisageDvachevsky/veil-core/actions/workflows/ci.yml/badge.svg)](https://github.com/VisageDvachevsky/veil/actions/workflows/ci.yml)
-[![Unit Tests](https://github.com/VisageDvachevsky/veil-core/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/VisageDvachevsky/veil/actions/workflows/unit-tests.yml)
+[![CI](https://github.com/VisageDvachevsky/veil-core/actions/workflows/ci.yml/badge.svg)](https://github.com/VisageDvachevsky/veil-core/actions/workflows/ci.yml)
+[![Unit Tests](https://github.com/VisageDvachevsky/veil-core/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/VisageDvachevsky/veil-core/actions/workflows/unit-tests.yml)
 [![Integration Tests](https://github.com/VisageDvachevsky/veil-core/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/VisageDvachevsky/veil-core//actions/workflows/integration-tests.yml)
 [![Security Tests](https://github.com/VisageDvachevsky/veil-core/actions/workflows/security-tests.yml/badge.svg)](https://github.com/VisageDvachevsky/veil-core//actions/workflows/security-tests.yml)
 [![Network Emulation](https://github.com/VisageDvachevsky/veil-core/actions/workflows/network-emulation.yml/badge.svg)](https://github.com/VisageDvachevsky/veil-core//actions/workflows/network-emulation.yml)
@@ -16,10 +16,10 @@ Install VEIL client with a single command:
 
 ```bash
 # Install CLI-only client (with interactive setup wizard)
-curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-core/main/install_client.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-client/main/install_client.sh | sudo bash
 
 # Install client with Qt6 GUI (with interactive setup wizard)
-curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-core/main/install_client.sh | sudo bash -s -- --with-gui
+curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-client/main/install_client.sh | sudo bash -s -- --with-gui
 ```
 
 The installer includes an **interactive setup wizard** that guides you through:
@@ -47,10 +47,10 @@ Install VEIL server with a single command:
 
 ```bash
 # Install CLI-only server
-curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-core//main/install_veil.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-client/main/install_veil.sh | sudo bash
 
 # Install server with Qt6 GUI monitoring dashboard
-curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-core/main/install_veil.sh | sudo bash -s -- --with-gui
+curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-client/main/install_veil.sh | sudo bash -s -- --with-gui
 ```
 
 ## Building from Source

@@ -112,7 +112,7 @@ INSTALL DEPENDENCIES (Ubuntu/Debian):
     # Qt6 (for GUI builds)
     sudo apt-get install qt6-base-dev
 
-For more information, visit: https://github.com/VisageDvachevsky/veil
+For more information, visit: https://github.com/VisageDvachevsky/veil-core
 EOF
 }
 
