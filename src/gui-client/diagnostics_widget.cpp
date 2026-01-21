@@ -421,8 +421,8 @@ void DiagnosticsWidget::onSimulateUpdates() {
 
   updateObfuscationProfile(
       true,
-      128 + (QRandomGenerator::global()->bounded(256)),
-      QString("Poisson (lambda=0.%1)").arg(3 + (QRandomGenerator::global()->bounded(4))),
+      128 + QRandomGenerator::global()->bounded(256),
+      QString("Poisson (lambda=0.%1)").arg(3 + QRandomGenerator::global()->bounded(4)),
       "IoT Sensor",
       static_cast<double>(QRandomGenerator::global()->bounded(50)) / 10.0
   );
