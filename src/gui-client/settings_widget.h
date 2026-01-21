@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QTimer>
 
 namespace veil::gui {
 
