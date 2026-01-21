@@ -94,7 +94,7 @@ inline bool supports_color() {
   return false;
 #else
   // Check for TTY and TERM environment
-  if (!isatty(fileno(stdout))) {
+  if (isatty(fileno(stdout)) == 0) {
     return false;
   }
   const char* term = std::getenv("TERM");
@@ -157,7 +157,7 @@ inline void print_success(const std::string& message) {
   if (state.use_color) {
     std::cout << colors::kReset;
   }
-  std::cout << " " << message << std::endl;
+  std::cout << " " << message << '\n';
 }
 
 inline void print_error(const std::string& message) {
@@ -169,7 +169,7 @@ inline void print_error(const std::string& message) {
   if (state.use_color) {
     std::cerr << colors::kReset;
   }
-  std::cerr << " " << message << std::endl;
+  std::cerr << " " << message << '\n';
 }
 
 inline void print_warning(const std::string& message) {
@@ -181,7 +181,7 @@ inline void print_warning(const std::string& message) {
   if (state.use_color) {
     std::cerr << colors::kReset;
   }
-  std::cerr << " " << message << std::endl;
+  std::cerr << " " << message << '\n';
 }
 
 inline void print_info(const std::string& message) {
@@ -193,7 +193,7 @@ inline void print_info(const std::string& message) {
   if (state.use_color) {
     std::cout << colors::kReset;
   }
-  std::cout << " " << message << std::endl;
+  std::cout << " " << message << '\n';
 }
 
 inline void print_status(const std::string& label, const std::string& value,
@@ -213,14 +213,14 @@ inline void print_status(const std::string& label, const std::string& value,
   if (state.use_color && value_color != nullptr) {
     std::cout << colors::kReset;
   }
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 // Progress bar
 class ProgressBar {
  public:
-  explicit ProgressBar(int total, int width = 40, const std::string& prefix = "")
-      : total_(total), width_(width), prefix_(prefix), current_(0) {}
+  explicit ProgressBar(int total, int width = 40, std::string prefix = "")
+      : total_(total), width_(width), prefix_(std::move(prefix)) {}
 
   void update(int current) {
     current_ = current;
@@ -231,7 +231,7 @@ class ProgressBar {
 
   void finish() {
     update(total_);
-    std::cout << std::endl;
+    std::cout << '\n';
   }
 
  private:
@@ -269,13 +269,13 @@ class ProgressBar {
   int total_;
   int width_;
   std::string prefix_;
-  int current_;
+  int current_{0};
 };
 
 // Spinner for ongoing operations
 class Spinner {
  public:
-  explicit Spinner(const std::string& message) : message_(message), frame_(0), running_(false) {}
+  explicit Spinner(std::string message) : message_(std::move(message)) {}
 
   void start() {
     running_ = true;
@@ -304,7 +304,7 @@ class Spinner {
     if (state.use_color) {
       std::cout << colors::kReset;
     }
-    std::cout << " " << message_ << "          " << std::endl;  // Extra spaces to clear
+    std::cout << " " << message_ << "          " << '\n';  // Extra spaces to clear
   }
 
  private:
@@ -328,8 +328,8 @@ class Spinner {
   }
 
   std::string message_;
-  int frame_;
-  bool running_;
+  int frame_{0};
+  bool running_{false};
 };
 
 // Banner/header printing
@@ -340,7 +340,7 @@ inline void print_banner(const std::string& title, const std::string& version = 
   if (state.use_color) {
     std::cout << colors::kBrightCyan << colors::kBold;
   }
-  std::cout << line << std::endl;
+  std::cout << line << '\n';
   std::cout << "  " << title;
   if (!version.empty()) {
     if (state.use_color) {
@@ -351,18 +351,18 @@ inline void print_banner(const std::string& title, const std::string& version = 
       std::cout << colors::kReset << colors::kBrightCyan << colors::kBold;
     }
   }
-  std::cout << "  " << std::endl;
+  std::cout << "  " << '\n';
   std::cout << line;
   if (state.use_color) {
     std::cout << colors::kReset;
   }
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 // Section header
 inline void print_section(const std::string& title) {
   auto& state = cli_state();
-  std::cout << std::endl;
+  std::cout << '\n';
   if (state.use_color) {
     std::cout << colors::kBold << colors::kBrightWhite;
   }
@@ -370,7 +370,7 @@ inline void print_section(const std::string& title) {
   if (state.use_color) {
     std::cout << colors::kReset;
   }
-  std::cout << std::endl;
+  std::cout << '\n';
 
   if (state.use_color) {
     std::cout << colors::kDim;
@@ -379,7 +379,7 @@ inline void print_section(const std::string& title) {
   if (state.use_color) {
     std::cout << colors::kReset;
   }
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 // Key-value table row
@@ -394,7 +394,7 @@ inline void print_row(const std::string& key, const std::string& value, int key_
   if (state.use_color) {
     std::cout << colors::kReset;
   }
-  std::cout << " : " << value << std::endl;
+  std::cout << " : " << value << '\n';
 }
 
 // Key-value table row with colored value
@@ -418,7 +418,7 @@ inline void print_row_colored(const std::string& key, const std::string& value,
   if (state.use_color && value_color != nullptr) {
     std::cout << colors::kReset;
   }
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 // Format bytes to human-readable

@@ -54,13 +54,13 @@ bool load_key_from_file(const std::string& path, std::array<std::uint8_t, 32>& k
 // Helper functions for logging
 void log_signal_sigint() {
   LOG_INFO("Received SIGINT, shutting down...");
-  std::cout << std::endl;
+  std::cout << '\n';
   cli::print_warning("Received interrupt signal, initiating graceful shutdown...");
 }
 
 void log_signal_sigterm() {
   LOG_INFO("Received SIGTERM, shutting down...");
-  std::cout << std::endl;
+  std::cout << '\n';
   cli::print_warning("Received termination signal, initiating graceful shutdown...");
 }
 
@@ -83,10 +83,10 @@ void log_new_client(const std::string& host, std::uint16_t port, std::uint64_t s
     std::cout << cli::colors::kBrightGreen << cli::symbols::kCircle << cli::colors::kReset
               << " Client connected: " << cli::colors::kBrightCyan << host << ":" << port
               << cli::colors::kReset << " (session " << cli::colors::kDim << session_id
-              << cli::colors::kReset << ")" << std::endl;
+              << cli::colors::kReset << ")" << '\n';
   } else {
     std::cout << "[+] Client connected: " << host << ":" << port << " (session " << session_id
-              << ")" << std::endl;
+              << ")" << '\n';
   }
 }
 
@@ -104,10 +104,10 @@ void log_client_disconnected(const std::string& host, std::uint16_t port,
     std::cout << cli::colors::kBrightRed << cli::symbols::kCircleEmpty << cli::colors::kReset
               << " Client disconnected: " << cli::colors::kDim << host << ":" << port
               << cli::colors::kReset << " (session " << cli::colors::kDim << session_id
-              << cli::colors::kReset << ")" << std::endl;
+              << cli::colors::kReset << ")" << '\n';
   } else {
     std::cout << "[-] Client disconnected: " << host << ":" << port << " (session " << session_id
-              << ")" << std::endl;
+              << ")" << '\n';
   }
 }
 
@@ -133,7 +133,7 @@ void print_configuration(const server::ServerConfig& config) {
   }
   cli::print_row("Verbose", config.verbose ? "Yes" : "No");
   cli::print_row("Daemon Mode", config.daemon_mode ? "Yes" : "No");
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 void print_server_status(std::size_t max_clients) {
@@ -150,7 +150,7 @@ void print_server_status(std::size_t max_clients) {
   cli::print_row("Bytes Received", cli::format_bytes(g_stats.total_bytes_received.load()));
   cli::print_row("Packets Sent", std::to_string(g_stats.total_packets_sent.load()));
   cli::print_row("Packets Received", std::to_string(g_stats.total_packets_received.load()));
-  std::cout << std::endl;
+  std::cout << '\n';
 }
 
 }  // namespace
@@ -162,22 +162,22 @@ int main(int argc, char* argv[]) {
 
   if (!server::parse_args(argc, argv, config, ec)) {
     cli::print_error("Failed to parse arguments: " + ec.message());
-    std::cerr << std::endl;
-    std::cerr << "Usage: veil-server [-p <port>] [options]" << std::endl;
-    std::cerr << std::endl;
-    std::cerr << "Options:" << std::endl;
-    std::cerr << "  -p, --port <port>        Listen port (default: 4433)" << std::endl;
-    std::cerr << "  -l, --listen <addr>      Listen address (default: 0.0.0.0)" << std::endl;
-    std::cerr << "  -c, --config <file>      Configuration file path" << std::endl;
-    std::cerr << "  -k, --key <file>         Pre-shared key file" << std::endl;
-    std::cerr << "  -m, --max-clients <n>    Maximum clients (default: 256)" << std::endl;
-    std::cerr << "  -d, --daemon             Run as daemon" << std::endl;
-    std::cerr << "  -v, --verbose            Enable verbose logging" << std::endl;
-    std::cerr << "  --tun-name <name>        TUN device name (default: veil0)" << std::endl;
-    std::cerr << "  --tun-ip <ip>            TUN device IP (default: 10.8.0.1)" << std::endl;
-    std::cerr << "  --nat                    Enable NAT forwarding" << std::endl;
-    std::cerr << "  --nat-interface <iface>  External NAT interface" << std::endl;
-    std::cerr << std::endl;
+    std::cerr << '\n';
+    std::cerr << "Usage: veil-server [-p <port>] [options]" << '\n';
+    std::cerr << '\n';
+    std::cerr << "Options:" << '\n';
+    std::cerr << "  -p, --port <port>        Listen port (default: 4433)" << '\n';
+    std::cerr << "  -l, --listen <addr>      Listen address (default: 0.0.0.0)" << '\n';
+    std::cerr << "  -c, --config <file>      Configuration file path" << '\n';
+    std::cerr << "  -k, --key <file>         Pre-shared key file" << '\n';
+    std::cerr << "  -m, --max-clients <n>    Maximum clients (default: 256)" << '\n';
+    std::cerr << "  -d, --daemon             Run as daemon" << '\n';
+    std::cerr << "  -v, --verbose            Enable verbose logging" << '\n';
+    std::cerr << "  --tun-name <name>        TUN device name (default: veil0)" << '\n';
+    std::cerr << "  --tun-ip <ip>            TUN device IP (default: 10.8.0.1)" << '\n';
+    std::cerr << "  --nat                    Enable NAT forwarding" << '\n';
+    std::cerr << "  --nat-interface <iface>  External NAT interface" << '\n';
+    std::cerr << '\n';
     return EXIT_FAILURE;
   }
 
@@ -317,19 +317,19 @@ int main(int argc, char* argv[]) {
   g_stats.start_time = std::chrono::steady_clock::now();
 
   // Print running status
-  std::cout << std::endl;
+  std::cout << '\n';
   cli::print_section("Server Running");
 
   auto& cli_st = cli::cli_state();
   if (cli_st.use_color) {
     std::cout << cli::colors::kBrightGreen << cli::symbols::kCircle << cli::colors::kReset
-              << " Server is ready and accepting connections" << std::endl;
-    std::cout << cli::colors::kDim << "  Press Ctrl+C to stop" << cli::colors::kReset << std::endl;
+              << " Server is ready and accepting connections" << '\n';
+    std::cout << cli::colors::kDim << "  Press Ctrl+C to stop" << cli::colors::kReset << '\n';
   } else {
-    std::cout << "[*] Server is ready and accepting connections" << std::endl;
-    std::cout << "    Press Ctrl+C to stop" << std::endl;
+    std::cout << "[*] Server is ready and accepting connections" << '\n';
+    std::cout << "    Press Ctrl+C to stop" << '\n';
   }
-  std::cout << std::endl;
+  std::cout << '\n';
 
   LOG_INFO("Server running, accepting connections...");
 
@@ -461,7 +461,7 @@ int main(int argc, char* argv[]) {
   }
 
   // Cleanup
-  std::cout << std::endl;
+  std::cout << '\n';
   cli::print_section("Shutdown");
   cli::print_info("Cleaning up routes and NAT...");
   LOG_INFO("Shutting down...");
