@@ -15,12 +15,31 @@ A secure UDP-based transport protocol with cryptographic handshakes and encrypte
 Install VEIL client with a single command:
 
 ```bash
-# Install CLI-only client
+# Install CLI-only client (with interactive setup wizard)
 curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-core/main/install_client.sh | sudo bash
 
-# Install client with Qt6 GUI
+# Install client with Qt6 GUI (with interactive setup wizard)
 curl -sSL https://raw.githubusercontent.com/VisageDvachevsky/veil-core/main/install_client.sh | sudo bash -s -- --with-gui
 ```
+
+The installer includes an **interactive setup wizard** that guides you through:
+- Entering your server address and port
+- Understanding what key files are needed
+- Step-by-step instructions for transferring configuration files from your server
+
+### Post-Installation Setup Wizard
+
+After installation, you can also run the interactive setup wizard anytime:
+
+```bash
+sudo /usr/local/share/veil/setup-wizard.sh
+```
+
+This wizard will:
+- Check your current configuration status
+- Guide you through server configuration
+- Help you obtain and set up the required cryptographic key files
+- Verify your setup is complete and ready to connect
 
 ### One-Line Server Installer
 

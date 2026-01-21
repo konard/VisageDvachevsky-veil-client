@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QLabel>
+#include <QTimer>
 
 namespace veil::gui {
 
@@ -14,8 +16,13 @@ class MainWindow : public QMainWindow {
   explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow() override;
 
+ private slots:
+  void showAboutDialog();
+
  private:
   void setupUi();
+  void setupMenuBar();
+  void setupStatusBar();
   void applyDarkTheme();
 
   ServerStatusWidget* statusWidget_;
